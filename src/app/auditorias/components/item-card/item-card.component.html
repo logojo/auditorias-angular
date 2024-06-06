@@ -1,0 +1,26 @@
+
+<mat-card [ngClass]="['w-24rem', 'mb-4', cssClass]">
+
+    <mat-card-content>
+       <div class="w-1 flex justify-content-center p-2 shadow-2 border-round-md" [ngClass]="[cssClass]">
+        <mat-icon aria-hidden="false" fontIcon="folder_open"></mat-icon>
+       </div>
+       <div class="text-center">
+            <div class="text-3xl font-bold p-3">{{ amount }}</div>
+            <div class="text-2xl font-medium pb-5">{{ name }}</div>
+        </div> 
+    </mat-card-content>
+   
+    <mat-card-actions>
+        <div class="w-12 ">
+            <mat-divider></mat-divider>
+            <div class="pt-3 pb-2">
+                <button mat-flat-button >
+                    Más Información
+                    <mat-icon iconPositionEnd>arrow_right_alt</mat-icon>           
+                </button>
+            </div>
+        </div>       
+    </mat-card-actions>
+</mat-card>
+ 

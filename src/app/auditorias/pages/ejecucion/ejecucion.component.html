@@ -1,0 +1,30 @@
+<mat-card>
+    <mat-card-content>
+        <div class="text-center">
+            <h2>Auditoria {{ auditoria()?.folio }}</h2>
+            <h3 class="">( {{ auditoria()?.tipo }} )</h3>
+        </div>
+
+        <app-stteper 
+          [stepperFields]="stepperFields"
+          [titles]="titles"
+          (onElementForm)="onSave( $event )"
+          (onStepEmitter)="onFillFields( $event )"
+          [step]="ejecucion()?.step"
+        /> 
+
+        <div class="fab-button" *ngIf="several">
+            <button mat-mini-fab matTooltip="Saltar este paso" color="primary" (click)="skipStep()">
+                <mat-icon>forward</mat-icon>
+            </button>
+        </div>
+      
+        <div class="fab-button-see" *ngIf="docs">
+            <button mat-mini-fab matTooltip="Ver oficio" color="primary">
+                <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+        </div>
+     
+    </mat-card-content>
+</mat-card>
+

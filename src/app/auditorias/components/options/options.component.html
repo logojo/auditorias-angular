@@ -1,0 +1,65 @@
+
+<h2 mat-dialog-title>Control de la Auditoria</h2>
+
+<mat-dialog-content>
+  <h3  class="text-center">Auditoria #: {{ auditoria()?.folio }}</h3>
+  <div class="flex gap-2 justify-content-center">
+    <button mat-fab extended color="primary" mat-dialog-close (click)="openDialogForm()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-fab extended color="accent" mat-dialog-close (click)="delete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+
+  <div class="mt-5">
+   <h3 class="text-center">Procesos de la auditoria</h3>
+   <div >
+    @for ( etapa of etapas; track $index ) {
+      <div 
+        class="flex align-items-center justify-content-between mb-1"        
+        (click)="onNavigate($index, auditoria()?.id)"
+        [mat-dialog-close]="true"  
+      >
+       <span class="item-etapa">{{ etapa }}</span>
+       @if( getStatus( etapa ) === 'No iniciada') {
+        <div class="badge-danger">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="warning"></mat-icon>
+          <span>{{ getStatus(etapa) }}</span>
+        </div>
+       }@else if ( getStatus( etapa ) === 'Finalizada' ) {
+        <div class="badge-success">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="done"></mat-icon>
+          <span>{{ getStatus(etapa) }}</span>
+        </div>
+      }@else{
+        <div class="badge-warning">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="autorenew"></mat-icon>
+          <span>{{ getStatus(etapa) }}</span>
+        </div>
+      }
+      </div>
+    }     
+   </div>
+  </div>
+
+ 
+  <div class="alert-info border-l-4 p-4 mt-5 text-sm w-17rem" role="alert">
+    <p class="font-bold flex align-items-center gap-1">
+      <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="info"></mat-icon>
+      Indicaciones
+    </p>
+    <p>El listado de arriba muestra el estado de las etapas de la auditoria
+      Puede dar click sobre la etapa para proceder a llenarla</p>
+  </div>
+  
+
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

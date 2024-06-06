@@ -1,0 +1,6 @@
+.item-etapa {
+    cursor: pointer;
+}
+.item-etapa:hover{
+    font-weight: bold;
+}

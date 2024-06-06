@@ -1,0 +1,31 @@
+<mat-card>
+    <mat-card-content>
+        <div class="flex justify-content-between align-items-center my-5 mx-2">
+            <span class="text-xl font-semibold">Listado de auditorias</span>
+            <button color="primary" mat-fab extended color="warn" (click)="openDialog()">
+                <mat-icon>add_circle</mat-icon>
+                AUDITORIA
+            </button>
+            
+        </div>
+
+        <app-search-box 
+          placeholder="Buscar auditorias.."
+          (onDebounce)="searchAuditoria($event)"
+        />
+
+        <app-table 
+            [displayedColumns]="columns"
+            [rows]="auditorias()"
+            placeholder="Buscar auditorias.."
+        />
+        <mat-paginator #paginator
+            (page)="handlePageEvent($event)"
+            [length]="pagination()?.totalItems"
+            [pageSize]="10"
+            [showFirstLastButtons]="true"
+            [pageSizeOptions]="[10,25,50]"
+            [pageIndex]="pagination()?.currentPage-1">
+        </mat-paginator>
+    </mat-card-content>
+</mat-card>    

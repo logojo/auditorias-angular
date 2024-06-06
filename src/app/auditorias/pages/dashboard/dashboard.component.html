@@ -1,0 +1,41 @@
+<div class="text-center my-5">
+    <div class="text-3xl font-semibold mb-2">Auditorias</div>
+    <div>Auditorias realizadas a la fecha desglosado por etapas</div>
+</div>
+<div class="flex flex-wrap justify-content-evenly">
+    <app-item-card 
+        cssClass="card-green"
+        [amount]="41"
+        name="Auditorias"
+    />
+
+    <app-item-card 
+        cssClass="card-blue"
+        [amount]="12"
+        name="Planeación"
+    />
+
+    <app-item-card 
+        cssClass="card-red"
+        [amount]="15"
+        name="Ejecución"
+    />
+
+    <app-item-card 
+        cssClass="card-yellow"
+        [amount]="0"
+        name="Seguimiento"
+    />
+
+    <app-item-card 
+        cssClass="card-purple"
+        [amount]="2"
+        name="Informe"
+    />
+
+    <app-item-card 
+        cssClass="card-cyan"
+        [amount]="23"
+        name="Conclusión"
+    />
+</div>

@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="dialog-header">Agregar nueva auditoría</h2>
+
+<form [formGroup]="auditoriasForm" (ngSubmit)="onSave()">
+<mat-dialog-content>    
+        <div class="grid p-5">
+            <mat-form-field class="col-6">
+                <mat-label>Tipo de auditoria</mat-label>                
+                <input type="text" matInput [matAutocomplete]="tipo" formControlName="tipoAuditoriaId">
+                <mat-autocomplete #tipo="matAutocomplete" [displayWith]="displayTipo">
+                  @for (tipo of tipos(); track $index) {
+                    <mat-option [value]="tipo">{{ tipo.nombre }}</mat-option>
+                  } 
+                </mat-autocomplete>
+              </mat-form-field>
+             
+               @if(auditoriasForm.get('tipoAuditoriaId')?.value?.nombre  === 'Conjunta') {                 
+                <mat-form-field class="col-6">
+                  <mat-label>Representante ó Áreas</mat-label>
+                  <mat-select formControlName="representantes">
+                    <mat-option value="ASF">ASF</mat-option>
+                    <mat-option value="ASE">ASE</mat-option>
+                    <mat-option value="SFPF">SFPF</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              } 
+              
+
+              <mat-form-field class="col-6">
+                <mat-label>Folio de la auditoría</mat-label>
+                <input matInput formControlName="folio">
+              </mat-form-field>
+
+              <mat-form-field class="col-6">
+                <mat-label>Dependencia</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto" formControlName="dependenciaId">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayDependencia">
+                  @for (dependencia of dependencias(); track $index) {
+                    <mat-option [value]="dependencia">{{ dependencia.dependencia }}</mat-option>
+                  } 
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <mat-form-field class="col-6">
+                <mat-label>Programa</mat-label>
+                <mat-select formControlName="programaId">
+                  @for (programa of programas(); track $index) {
+                    <mat-option [value]="programa.id">{{ programa.programa }}</mat-option>
+                  } 
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="col-6">
+                <mat-label>Ejercicio</mat-label>
+                <mat-select formControlName="ejercicioId">
+                  @for (ejercicio of ejercicios(); track $index) {
+                    <mat-option [value]="ejercicio.id">{{ ejercicio.ejercicio }}</mat-option>
+                  } 
+                </mat-select>
+              </mat-form-field>
+        </div>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="px-5 pb-3">
+    <button mat-fab extended color="warn" type="submit" [disabled]="auditoriasForm.invalid">
+      <mat-icon>save</mat-icon>
+      GUARDAR
+    </button>
+    
+    <button mat-button mat-dialog-close>CERRAR</button>
+  </div>
+</mat-dialog-actions>
+</form>

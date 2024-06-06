@@ -1,0 +1,86 @@
+
+<mat-stepper 
+  #stepper 
+  [orientation]="(stepperOrientation | async)!"
+  labelPosition="bottom"
+  [linear]="true"
+  (selectionChange)="fillFields($event)"
+  >
+  @if( stepperFields ) {
+  @for (step of stepperFields; track $index) {
+  <mat-step 
+    [stepControl]="auditoria[$index]" 
+    [completed]="isCompleted( $index )"
+  >
+    <form [formGroup]="auditoria[$index]" (ngSubmit)="submitForm($index)">
+      <ng-template matStepLabel>{{ step.id }}</ng-template>
+
+      <div class="text-center font-bold text-xl md:text-2xl text-" >{{ titles[$index] }}</div>
+      
+      <div class="grid p-5">
+        @for (field of step.fields; track field.id) {
+      
+          @if(field.type === 'file' ) {
+            <div class="col-12"  #input (focus)="getElementRef(field?.name+'-'+step.id.split(' ')[1])"  [id]="field?.name+'-'+step.id.split(' ')[1]"   [ngStyle]="field.ruleable && {'display': 'none'}">  
+            <input type="file" (change)="onFileChange(step.id, $event)"  />
+            </div>
+          } @else if(field.type === 'select' ) { 
+            <mat-form-field class="col-12 md:col-6">
+              <mat-label>{{ field.label }}</mat-label>
+              <mat-select  
+                 [formControlName]="field.name"  
+                 (selectionChange)="showInputs(field?.live, $event.value, field?.rule, field?.inputs, step.id)"                
+              >
+                @for (option of field.options; track $index) {
+                  <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                } 
+              </mat-select>             
+            </mat-form-field>
+          } @else if(field.type === 'date') {
+            <div class="col-12 md:col-6"  #input (focus)="getElementRef(field?.name+'-'+step.id.split(' ')[1])"  [id]="field?.name+'-'+step.id.split(' ')[1]"   [ngStyle]="field.ruleable && {'display': 'none'}">  
+              <mat-form-field class="w-full">
+                <mat-label>{{ field.label }}</mat-label>
+                <input matInput [matDatepicker]="picker" [formControlName]="field.name">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>  
+            </div>        
+          } @else {         
+            <div class="col-12 md:col-6"  #input (focus)="getElementRef(field?.name+'-'+step.id.split(' ')[1])"  [id]="field?.name+'-'+step.id.split(' ')[1]"  [ngStyle]="field.ruleable && {'display': 'none'}">    
+              <mat-form-field class="w-full">
+                <mat-label>{{ field.label }}</mat-label>
+                <input matInput [type]="field.type" [formControlName]="field.name">
+              </mat-form-field>              
+            </div>
+          }
+        }
+        
+      </div>
+      <div class="flex justify-content-end">
+        <button mat-fab extended color="primary" type="submit" [disabled]="auditoria[$index].invalid">
+          <mat-icon>save</mat-icon>
+          Guardar
+        </button>
+      </div>
+      
+      <div class="px-8 mt-3 flex justify-content-between ">
+        @if($index > 0 ) {
+          <button mat-mini-fab matStepperPrevious color="warn">
+            <mat-icon>arrow_back_ios</mat-icon>
+          </button>
+        }
+        <button mat-mini-fab matStepperNext color="warn">
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </button>
+      </div>
+    </form>
+  </mat-step>
+}
+  }
+</mat-stepper>
+  
+ 
+
+
+

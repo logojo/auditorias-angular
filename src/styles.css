@@ -1,1 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #f4f4f4; }
+
+.mat-icon {
+    font-size: 20px;
+  }
+
+.badge-success {
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #E3FCEF;
+    font-size: 12px;
+    color: #047A61;
+    width: 100px;
+}
+
+.badge-info {
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #E9F2FE;
+    font-size: 12px;
+    color: #1D72E3;
+    width: 100px;
+}
+
+.badge-danger {
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FEEEEE;
+    font-size: 12px;
+    color: #7F1D1D;
+    width: 100px;
+}
+
+.badge-warning {
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FEFBDB;
+    font-size: 12px;
+    color: #713F12;
+    width: 100px;
+}
+
+.alert-info {
+    background-color: #BFEFFF ;
+    border-left:  4px solid #26C9FF;
+    color: #0085b2;
+}
+
+/* .my-class{
+    width: 100px!important;
+    min-width: unset!important;
+} */
+
+
+.dialog-header{
+ background-color: #7F1D1D;
+ color: white!important;
+}

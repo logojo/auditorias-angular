@@ -1,0 +1,29 @@
+.card-green {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(110,227,133,0.36458333333333337) 100%, rgba(22,117,84,1) 100%);
+}
+
+.card-blue {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(153,229,255,0.36458333333333337) 100%, rgba(153,229,255,1) 100%);
+}
+
+.card-red {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,115,115,0.36458333333333337) 100%, rgba(255,115,155,1) 100%);
+}
+
+.card-yellow {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,153,0.36458333333333337) 100%, rgba(255,255,153,1) 100%);
+}
+
+.card-purple {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(229,153,255,0.36458333333333337) 100%, rgba(229,153,255,1) 100%);
+}
+
+.card-cyan {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(5,255,255,0.36458333333333337) 100%, rgba(5,255,255,1) 100%);
+}

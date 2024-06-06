@@ -1,0 +1,9 @@
+<mat-form-field class="w-full">
+  <mat-label>{{ placeholder || 'buscar' }}</mat-label>
+  <input 
+    matInput 
+    (keyup)="onKeyPress( txtInput.value )" 
+    placeholder="Ingrese los criterios de busqueda" 
+    [value]="initialValue"
+    #txtInput>
+</mat-form-field>

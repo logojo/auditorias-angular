@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-card-content>
+        <div class="text-center">
+            <h2>Auditoria {{ auditoria()?.folio }}</h2>
+            <h3 class="">( {{ auditoria()?.tipo }} )</h3>
+        </div>
+
+    
+         <app-stteper 
+          [stepperFields]="stepperFields"
+          [titles]="titles"
+          (onElementForm)="onSave( $event )"
+          (onStepEmitter)="onFillFields( $event )"
+          [step]="planeacion()?.step"
+        /> 
+    </mat-card-content>
+</mat-card>
+
+
