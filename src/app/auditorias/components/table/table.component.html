@@ -39,6 +39,7 @@
                 <span>{{ row[column] }}</span>
               </div>
             }
+            
           }@else if( column === 'status' ) {       
             @if (  row[column]  ) {
               <div class="badge-success">
@@ -51,6 +52,14 @@
                 <span>Proceso</span>
               </div>
             }
+          }@else if (  column === 'archivo' ) {
+             <mat-icon 
+               aria-hidden="false" 
+               fontIcon="picture_as_pdf" 
+               color="primary"
+               class="cursor-pointer"
+               (click)="downloadFile( row[column] )"
+              ></mat-icon>
           }@else {
             {{ row[column] }}
           }

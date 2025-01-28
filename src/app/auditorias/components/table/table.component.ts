@@ -1,13 +1,8 @@
 import { Component, Input, ViewChild, effect, input, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-
-//import {MatInputModule} from '@angular/material/input';
-//import {MatFormFieldModule} from '@angular/material/form-field';
-
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -17,6 +12,8 @@ import {MatDialog } from '@angular/material/dialog';
 import { OptionsComponent } from '../options/options.component';
 import { Auditoria, Meta } from '../../interfaces/auditorias.interface';
 import { AuditoriasService } from '../../services/auditorias.service';
+import { DocumentService } from '../../services';
+import { HttpResponse } from '@angular/common/http';
 
 
 
@@ -25,13 +22,8 @@ import { AuditoriasService } from '../../services/auditorias.service';
   standalone: true,
   imports:[
     CommonModule, 
-
-    //MatFormFieldModule, 
-    //MatInputModule, 
-
     MatTableModule, 
     MatSortModule, 
-    //MatPaginatorModule, 
     MatChipsModule, 
     MatButtonModule, 
     MatIconModule, 
@@ -43,6 +35,7 @@ import { AuditoriasService } from '../../services/auditorias.service';
 export class TableComponent<T> {
 
   private auditoriasService = inject ( AuditoriasService )
+  private documentService = inject ( DocumentService )
 
   @Input()
   placeholder: string = '';
@@ -72,6 +65,29 @@ export class TableComponent<T> {
   openDialog( row: Auditoria ) {
     this.auditoriasService.setAuditoria( row );     
     this.dialog.open(OptionsComponent);
+  }
+
+  downloadFile( documento: string ) {
+
+    const data = {
+      dependencia: documento.split('/')[6],
+      ejercicio: documento.split('/')[7],
+      folio: documento.split('/')[8],
+      name: documento.split('/')[9]
+    }
+
+    this.documentService.downloadFile( data )
+    .subscribe( ( doc ) => {
+      const file  = new Blob([doc], {type: 'application/pdf'});
+      const urlArchivo = window.URL.createObjectURL(file);
+      const link = document.createElement('a');
+      link.href = urlArchivo;
+      link.download = data.name.slice(0,16);
+      link.click();
+      window.URL.revokeObjectURL(urlArchivo);
+    })
+
+    
   }
 
 }

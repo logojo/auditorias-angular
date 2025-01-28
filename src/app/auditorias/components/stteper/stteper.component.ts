@@ -64,6 +64,7 @@ export class StteperComponent implements OnChanges {
    public titles :string[] = []
 
    public step = input.required<number>()
+   public several = input<boolean>(false)
 
    public auditoria: FormGroup[] = []
 
@@ -74,12 +75,13 @@ export class StteperComponent implements OnChanges {
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
       
-     effect(() => {    
+     effect(() => {  
         if( !this.step() ){
             this.stepper.reset()
-        }else if( this.step() > 0 && this.step() < this.stepperFields.length  ){
-           this.stepper.selectedIndex = this.step() -1
-        }else if( this.stepperFields.length !== 0) {
+        } else if( this.step() > 0 && this.step() < this.stepperFields.length  ) {
+           if( !this.several() )
+               this.stepper.selectedIndex = this.step() -1
+        } else if( this.stepperFields.length !== 0) {
               this.stepper.selectedIndex = this.stepperFields.length -1;
        }
      })
@@ -103,6 +105,7 @@ export class StteperComponent implements OnChanges {
           
      }
   }
+  
   isCompleted ( index : number ) : boolean {
     if( index < this.step()-1 )
         return true

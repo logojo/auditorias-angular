@@ -20,23 +20,32 @@ export interface Auditoria {
     ejercicio:       number;
     dependencia:     string;
     siglas:          string;
-    etapa:           string;
+    etapa:           Etapa;
     status:          boolean;  
 }
 
 export interface AuditoriaLocal {
     auditoriaId: string; 
-    etapa : string;
+    etapa : Etapa;
     status: boolean; 
     step : number;
     total: number;
 }
 
 export enum TipoAuditoria {
-    Directas = 'Directa',
-    Conjuntas = 'Conjunta',
-    Evaluaciones = 'Evaluación',
-    Reviciones = 'Revisión'
+    Directa = 'Directa',
+    Conjunta = 'Conjunta',
+    Evaluacion = 'Evaluación',
+    Revicion = 'Revisión'
+}
+
+export enum Etapa {
+    Inicio = 'Inicio',
+    Planeación = 'Planeación',
+    Ejecución = 'Ejecución',
+    Seguimiento = 'Seguimiento',
+    Informe = 'Informe',
+    Conclusión = 'Conclusión'
 }
 
 export interface Stepper {

@@ -9,6 +9,7 @@ export interface EjecucionRequest {
     auditoriaId: string;
     archivo: string;
     total:number;
+    several?:boolean;
     file?: File
 }
 

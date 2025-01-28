@@ -1,5 +1,5 @@
 
-import { Component, LOCALE_ID, ViewChild, computed, effect, inject } from '@angular/core';
+import { Component, LOCALE_ID, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
@@ -12,7 +12,7 @@ import { AuditoriasService, PlaneacionService, DocumentService } from '../../ser
 
 import { StteperComponent } from '../../components/stteper/stteper.component';
 
-import { Field, Stepper, TipoAuditoria } from '../../interfaces/auditorias.interface';
+import { Etapa, Field, Stepper, TipoAuditoria } from '../../interfaces/auditorias.interface';
 import { PlaneacionRequest, Tipo } from '../../interfaces/planeacion.intererface';
 import { InfoDoc } from '../../interfaces/Document.interface';
 
@@ -37,6 +37,8 @@ export default class PlaneacionComponent {
   public auditoria = computed( ()=> this.auditoriasService.auditoria());
   public planeacion = computed( ()=> this.planeacionesService.planeacion());
 
+  public step = signal<number|undefined>(undefined)
+
   public titles: string[] = [];
 
   @ViewChild(StteperComponent) stepper! : StteperComponent;
@@ -49,12 +51,13 @@ export default class PlaneacionComponent {
       if( this.auditoria() ) {
           this.onGetStepper( this.auditoria()!.tipo )
           this.planeacionesService.getPlaneacion( this.auditoria()!.id! )
-      }
-    })
+          this.step.set(this.planeacion()?.step)
+        }
+      }, { allowSignalWrites: true })
   }
 
   onGetStepper( tipo : TipoAuditoria) {
-    if( tipo === TipoAuditoria.Directas || tipo === TipoAuditoria.Evaluaciones){
+    if( tipo === TipoAuditoria.Directa || tipo === TipoAuditoria.Evaluacion){
       this.stepperFields = [
                             {  
                                 id: "paso 1", 
@@ -188,7 +191,7 @@ export default class PlaneacionComponent {
                   'Acta de Inicio de Auditoría',
                 ]
     }
-    else if( tipo === TipoAuditoria.Conjuntas ) {
+    else if( tipo === TipoAuditoria.Conjunta ) {
       this.stepperFields = [
         {
           id: "paso 1", 
@@ -337,7 +340,7 @@ export default class PlaneacionComponent {
      folio: this.auditoria()!.folio,
      tipo: this.auditoria()!.tipo,
      step: ''+planeacion.step,
-     etapa: this.auditoria()!.etapa
+     etapa: Etapa.Planeación
    }
   
      
@@ -361,7 +364,7 @@ export default class PlaneacionComponent {
         if( planeacion.step === this.stepperFields.length ) {
           this.auditoriasService.onUpdateLocal({
             auditoriaId: this.auditoria()!.id!,
-            etapa: 'Planeación',
+            etapa: Etapa.Planeación,
             status: true,
             step: planeacion.step,
             total: this.stepperFields.length
@@ -375,7 +378,7 @@ export default class PlaneacionComponent {
           if( planeacion.step === 1 ) {
             this.auditoriasService.onUpdateLocal({
               auditoriaId: this.auditoria()!.id!,
-              etapa: 'Planeación',
+              etapa: Etapa.Planeación,
               status: false,
               step: planeacion.step,
               total: this.stepperFields.length
@@ -394,9 +397,9 @@ export default class PlaneacionComponent {
      
      if( form ) {
      
-      if( selected === 0 && this.auditoria()?.tipo === TipoAuditoria.Directas ||
-          selected === 0 && this.auditoria()?.tipo === TipoAuditoria.Evaluaciones ||
-          selected === 1 && this.auditoria()?.tipo === TipoAuditoria.Conjuntas) { 
+      if( selected === 0 && this.auditoria()?.tipo === TipoAuditoria.Directa ||
+          selected === 0 && this.auditoria()?.tipo === TipoAuditoria.Evaluacion ||
+          selected === 1 && this.auditoria()?.tipo === TipoAuditoria.Conjunta) { 
           
           form.patchValue({
             monto: this.planeacion()?.monto,

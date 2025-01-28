@@ -23,8 +23,9 @@ export class AuditoriasService {
 
   constructor( private _snackBar: MatSnackBar ) {
     this.getAuditorias();
-    if( !this.auditoria() )
-       this.auditoria.set( JSON.parse( localStorage.getItem('auditoria') || '' ) );
+ 
+      if( !this.auditoria() && localStorage.getItem('auditoria') !== null )
+         this.auditoria.set( JSON.parse( localStorage.getItem('auditoria') || '' ) );
        
   }
 
@@ -62,7 +63,11 @@ export class AuditoriasService {
    if( auditoria.step === 1 ){
     this.#auditorias.update(auditorias => 
       auditorias.map(a => a.id === auditoria.auditoriaId ?
-        { ...a, etapa: auditoria.etapa } : a
+        { 
+          ...a, 
+          etapa: auditoria.etapa,
+          status: auditoria.status  
+        } : a
       )
     );
     

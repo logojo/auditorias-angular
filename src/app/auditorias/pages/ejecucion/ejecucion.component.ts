@@ -1,4 +1,5 @@
-import { Component, ViewChild, computed, effect, inject } from '@angular/core';
+import { Component, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -6,19 +7,20 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 
 import { switchMap } from 'rxjs';
 import moment from 'moment';
 
 import { AuditoriasService, DocumentService, EjecucionService } from '../../services';
 import { StteperComponent } from '../../components/stteper/stteper.component';
+import { ConfirmComponent } from '../../components/confirm/confirm.component';
+import { DialogTableComponent } from '../../components/dialog-table/dialog-table.component';
 
-import { Field, Stepper, TipoAuditoria } from '../../interfaces/auditorias.interface';
+import { Etapa, Field, Stepper, TipoAuditoria } from '../../interfaces/auditorias.interface';
 import { InfoDoc, Oficio } from '../../interfaces/Document.interface';
 import { EjecucionRequest } from '../../interfaces/ejecucion.interface';
-import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmComponent } from '../../components/confirm/confirm.component';
+
 
 @Component({
   selector: 'app-ejecucion',
@@ -39,29 +41,134 @@ export default class EjecucionComponent {
   private documentService = inject( DocumentService );
   private ejecucionService = inject( EjecucionService);
   private router = inject( Router )
+  public dialog = inject( MatDialog ) 
 
   public auditoria = computed( ()=> this.auditoriasService.auditoria());
   public ejecucion = computed( ()=> this.ejecucionService.ejecucion());
 
+  public several =  signal<boolean>(false) 
+  public step = signal<number|undefined>(undefined)
+  public selected = signal<number|undefined>(undefined)
+
   public titles: string[] = [];
-  public several: boolean = false
+
   public docs: boolean = false;
+
 
   @ViewChild(StteperComponent) stepper! : StteperComponent;
 
   public stepperFields : Stepper[] = []
 
-  constructor( public dialog: MatDialog ) {    
+  constructor() {    
     effect(()=> {
       if( this.auditoria() ) {
           this.onGetStepper( this.auditoria()!.tipo )
-          this.ejecucionService.getEjecucion( this.auditoria()!.id! )        
+          this.ejecucionService.getEjecucion( this.auditoria()!.id! )
+          //if( !this.several() )        
+              this.step.set(this.ejecucion()?.step)
       }
-    })
+    }, { allowSignalWrites: true })
   }
 
   onGetStepper( tipo : TipoAuditoria) {
-    if( tipo === TipoAuditoria.Conjuntas ) { 
+    if( tipo === TipoAuditoria.Directa || tipo === TipoAuditoria.Evaluacion ) {
+         this.stepperFields = [
+          {
+            id: "paso 1", 
+            fields : [ 
+              { 
+                type: 'select',
+                name: 'prorroga', 
+                label:  '¿Existe Solicitud de prórroga?',
+                value: '',
+                required: true, 
+                live: true,
+                rule: ['1'],
+                inputs: ['folio','fecha_inicio','file'],
+                options: [           
+                    {value: '1', label: 'Sí' },
+                    {value: '0', label: 'No' },
+                ]
+              },
+              { type: 'text', name: 'folio', label: 'No. de Oficio', value: '', required: false, ruleable: true},
+              { type: 'date', name: 'fecha_inicio',  label: 'Fecha de Inicio', value: '', required: false, ruleable: true},
+              { type: 'file', name: 'file', label:'Subir Archivo', value: '', required: false, ruleable: true}
+            ]
+          },
+          {
+            id: "paso 2", 
+            fields : [
+              { 
+                type: 'select',
+                name: 'prorroga', 
+                label:  '¿Existe Solicitud de prórroga?',
+                value: '',
+                required: true, 
+                live: true,
+                rule: ['1'],
+                inputs: ['folio','fecha_inicio','file'],
+                options: [           
+                    {value: '1', label: 'Sí' },
+                    {value: '0', label: 'No' },
+                ]
+              },
+              { type: 'text', name: 'folio', label: 'No. de Oficio', value: '', required: false, ruleable: true},
+              { type: 'date', name: 'fecha_inicio', label: 'Fecha de Inicio', value: '', required: false, ruleable: true},
+              { type: 'file', name: 'file', label:'Subir Archivo', value: '', required: false, ruleable: true}
+            ]
+          },
+          {
+            id: "paso 3", 
+            fields : [
+              {
+                type: 'select',
+                name: 'tipo_oficio', 
+                label:  'Oficios',
+                value: '',
+                required: true, 
+                options: [           
+                    {value: Oficio.A, label: Oficio.A },
+                    {value: Oficio.A, label: Oficio.B },
+                    {value: Oficio.C, label: Oficio.C },
+                ]
+              },
+              { type: 'text', name: 'folio', label: 'No. de Oficio', value: '', required: true},
+              { type: 'text', name: 'descripcion', label: 'Breve descripción del oficio', value: '', required: true},
+              { type: 'date', name: 'fecha_inicio', label: 'Fecha de Inicio', value: '', required: true},
+              { type: 'file', name: 'file', label:'Subir Archivo', value: '', required: true}
+            ]
+          },
+          {
+            id: "paso 4", 
+            fields : [
+              {
+                type: 'select',
+                name: 'tipo_oficio', 
+                label:  'Oficios',
+                value: '',
+                required: true, 
+                options: [           
+                    {value: Oficio.A, label: Oficio.A },
+                    {value: Oficio.A, label: Oficio.B },
+                    {value: Oficio.C, label: Oficio.C },
+                ]
+              },
+              { type: 'text', name: 'folio', label: 'No. de Oficio', value: '', required: true},
+              { type: 'text', name: 'descripcion', label: 'Breve descripción del oficio', value: '', required: true},
+              { type: 'date', name: 'fecha_inicio', label: 'Fecha de Inicio', value: '', required: true},
+              { type: 'file', name: 'file', label:'Subir Archivo', value: '', required: true}
+            ]
+          }
+         ];
+
+         this.titles =  [
+          'Oficio de Solicitud de Prórroga',
+          'Oficio de Autorizacion de Prórroga',
+          'Oficios de Entrega de documentación para la atención de requerimientos emitido a la dependencia o Entidad fiscalizada',
+          'Oficios Complementarios',
+         ];
+    }
+    else if( tipo === TipoAuditoria.Conjunta ) { 
       this.stepperFields = [
         {
           id: "paso 1", 
@@ -254,68 +361,80 @@ export default class EjecucionComponent {
     }
   }
 
-  onSave( ejecucion: EjecucionRequest) {
+  onSave( ejecucion: EjecucionRequest ) {
     const infoDoc : InfoDoc = {
       dependencia: this.auditoria()!.siglas,
       folio: this.auditoria()!.folio,
       tipo: this.auditoria()!.tipo,
       step: ''+ejecucion.step,
-      etapa: this.auditoria()!.etapa 
+      etapa: Etapa.Ejecución
     }
 
-    this.documentService.onSaveFile( ejecucion.file!, infoDoc )
+    this.documentService.onSaveFile( ejecucion.file!, infoDoc, this.several() )
     .pipe(
       switchMap( (res) => {
         delete ejecucion.file
-        let eje : EjecucionRequest = { ...ejecucion, archivo: res.secureUrl, auditoriaId: this.auditoria()!.id!, total: this.stepperFields.length  }
+        let eje : EjecucionRequest = { 
+          ...ejecucion, 
+          archivo: 
+          res.secureUrl, 
+          auditoriaId: 
+          this.auditoria()!.id!, 
+          total: this.stepperFields.length,  
+          several: this.several()
+        }
         return this.ejecucionService.onSave( eje )
       })
     )
      .subscribe({
-      next: () => {        
+       next: () => {    
         this.auditoriasService.notification('Paso completado', 3000, 'Bien!!!');
         if( ejecucion.step === this.stepperFields.length ) {
           this.auditoriasService.onUpdateLocal({
             auditoriaId: this.auditoria()!.id!,
-            etapa: 'Ejecución',
+            etapa: Etapa.Ejecución,
             status: true,
             step: ejecucion.step,
-            total: this.stepperFields.length
+            total: this.stepperFields.length           
           })
           localStorage.setItem('url', '/auditorias/auditorias')
-          this.router.navigateByUrl('/auditorias/auditorias')
+          this.router.navigateByUrl('/auditorias/auditorias')         
         }
         else if( ejecucion.step  > 2 && ejecucion.step <= 7 || ejecucion.step  > 8 && ejecucion.step <= 11 ) {
-                console.log(ejecucion.step -1);
                 this.stepper.stepper.selectedIndex = ejecucion.step -1
-                this.openDialog()
+                this.openDialog( ejecucion.step -1 )
         }
-        else {  
-          this.stepper.stepper.next()
+        else {                     
+          if( ejecucion.step === 1 ) {  
 
-          if( ejecucion.step === 1 ) {
+            this.stepper.stepper.next();    
+
             this.auditoriasService.onUpdateLocal({
               auditoriaId: this.auditoria()!.id!,
-              etapa: 'Ejecución',
+              etapa: Etapa.Ejecución,
               status: false,
               step: ejecucion.step,
               total: this.stepperFields.length
             })
           }
+
         }
       },
       error:( message ) => {
         this.auditoriasService.notification(message, 4000, 'Error!!!');
-      }
+     }
     })
     
   }
 
   onFillFields( selected : number ) {
+    this.selected.set(selected)
     this.severalFiles( selected );
     const form = this.stepper.auditoria[selected];   
 
      if( form ) {
+
+      if( selected  > 1 && selected <= 6 || selected  > 7 && selected <= 10 ) return
         
        this.documentService.getDocument( this.auditoria()!.id!, this.auditoria()!.tipo, selected + 1, 'Ejecución' )
           .subscribe( (document) => {            
@@ -356,9 +475,10 @@ export default class EjecucionComponent {
         this.docs = false
 
     if( (selected  > 1 && selected <= 6 && selected === this.ejecucion()!.step -1) || (selected  > 7 && selected <= 10 && selected === this.ejecucion()!.step -1))
-        this.several = true;
+        this.several.set(true);
     else 
-        this.several = false
+        this.several.set(false)
+    
   }
 
   skipStep() {      
@@ -366,7 +486,7 @@ export default class EjecucionComponent {
     .subscribe({
       next: () => {    
          this.stepper.stepper.selected!.completed = true;
-            this.stepper.stepper.next()
+         this.stepper.stepper.next()
       },
       error:( message ) => {
         this.auditoriasService.notification(message, 4000, 'Error!!!');
@@ -374,15 +494,41 @@ export default class EjecucionComponent {
     })    
   }
 
-  openDialog(): void {
+  openDialog( step : number ): void {
+     
     const dialogRef = this.dialog.open(ConfirmComponent, {
       width: '350px',
     });
 
     dialogRef.afterClosed().subscribe(result => {      
-     if( !result )
+     if( !result ){
          this.stepper.stepper.next()
+     } else {
+       const form = this.stepper.auditoria[step]; 
+       this.several.set(true);
+       form.reset();
+     }
     });
+  }
+
+  seeDocuments(){
+    const dialogRef = this.dialog.open(DialogTableComponent, {
+      width: '850px',
+    });
+  }
+
+  getDocuments(){
+    
+
+    this.documentService.getDocuments( this.auditoria()!.id!, this.selected()! + 1, 'Ejecución' ) 
+        .subscribe({
+            next: () => {
+              this.seeDocuments()
+            },
+            error: () => {}
+         })  
+    
+    
   }
 
 }

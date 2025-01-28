@@ -30,8 +30,7 @@ export class EjecucionService {
   getEjecucion( auditoriaId: string ) {
     this.http.get<Ejecucion>(`${this.url}/ejecucion/${auditoriaId}` )         
     .subscribe((res) => {  
-          this.ejecucion.set( res );  
-
+          this.ejecucion.set( res );    
     })    
   }
 

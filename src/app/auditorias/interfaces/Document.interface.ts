@@ -1,3 +1,5 @@
+import { Etapa, TipoAuditoria } from "./auditorias.interface";
+
 export interface Document {
     folio: string;
     fecha_inicio: string;
@@ -11,9 +13,9 @@ export interface Document {
 export interface InfoDoc {
     dependencia: string;
     folio: string;
-    tipo: string;
+    tipo: TipoAuditoria;
     step: string;
-    etapa: string;
+    etapa: Etapa;
 }
 
 export enum Oficio  {

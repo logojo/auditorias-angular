@@ -17,7 +17,6 @@
         <app-table 
             [displayedColumns]="columns"
             [rows]="auditorias()"
-            placeholder="Buscar auditorias.."
         />
         <mat-paginator #paginator
             (page)="handlePageEvent($event)"

@@ -55,6 +55,9 @@ export class OptionsComponent {
     onNavigate( index: number, id: string ) {  
      const etapa = this.etapas[index]
 
+     console.log(this.etapas[index -1 ]);
+     
+
      if( ( this.etapas.indexOf( this.auditoria()!.etapa ) >  this.etapas.indexOf( etapa )) ||
          (this.auditoria()!.etapa === etapa && this.auditoria()!.status) 
        ) {
